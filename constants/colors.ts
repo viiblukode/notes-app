@@ -12,6 +12,8 @@ const Colors = {
     navTabActive: '#FF66C4',
     navTabInactive: '#8C8FA3',
     navTabActiveGlow: 'rgba(255, 102, 196, 0.3)',
+    textSecondaryLight: '#BEBED280',
+    homeChevron: "#FF9CF0"
 }
 
 export default Colors;

@@ -26,12 +26,12 @@ export const NavHeader = ({  title, showBackButton }:
 }
 
 export const IconHeader = (
-    {title, imageName, onPressHandler}: {title: string, imageName: string, onPressHandler: ()=> {}}
+    {title, imageName, onPressHandler}: {title: string, imageName: string, onPressHandler?: () => {}}
 ) => {
     return (
         <View style={styles.iconHeader}>
             <Text style={styles.headerText}>{title}</Text>
-            <TouchableOpacity onPress={() => onPressHandler()} >
+            <TouchableOpacity onPress={onPressHandler} >
                 <Image source={getImage(imageName)} />
             </TouchableOpacity>
         </View>

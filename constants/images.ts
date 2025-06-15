@@ -11,6 +11,11 @@ const Images = {
     paper: require('../assets/paper.png'),
     book: require('../assets/book.png'),
     info: require('../assets/info.png'),
+    robot: require('../assets/robot.png'),
+    healthWellnessAvatar: require('../assets/health-wellness-avatar.png'),
+    homeAvatar: require('../assets/home-avatar.png'),
+    workStudyAvatar: require('../assets/work-study-avatar.png'),
+
 }
 
 export type ImageName = keyof typeof Images;

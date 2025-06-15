@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { IconHeader } from '../../components/Header';
 import { getImage } from '../../constants/images';
+import { truncateText } from '../../utils/StringUtil';
 
 const HomeScreen = () => {
 
@@ -29,7 +30,11 @@ const HomeScreen = () => {
             icon: <Image source={getImage('health')} style={{width: 17, height: 17}} />,
             data: ['Maintain sufficient daily water intake'],
         },
-    ]
+    ];
+
+    const navigateToSettings = () => {
+        navigation.navigate('Settings');
+    }
     return (
         <LinearGradient 
             style={styles.container} 
@@ -40,13 +45,14 @@ const HomeScreen = () => {
                     <IconHeader 
                         title={Strings.HOME} 
                         imageName={'settings'}
-                        onPressHandler={() => { navigation.navigate('Settings'); }} />
+                        onPressHandler={navigateToSettings} />
                 </View>
                 <View style={styles.subHeader}>
                     <Image source={getImage('clock')}/>
                     <Text style={styles.subHeaderText}>{Strings.RECENT_NOTES}</Text>
                 </View>
                 <FlatList 
+                    style={{marginTop: 5}}
                     data={dummyNotesData}
                     keyExtractor={(item) => item.category} 
                     renderItem={({ item }) => (
@@ -57,8 +63,8 @@ const HomeScreen = () => {
                             </View>
                             {item.data.map((note, index) => (
                             <TouchableOpacity key={index} style={styles.noteItem}>
-                                <Text style={styles.noteText}>{note}</Text>
-                                <Ionicons name="chevron-forward" size={16} color="#FF9CF0" />
+                                <Text style={styles.noteText}>{truncateText(note)}</Text>
+                                <Ionicons name="chevron-forward" size={16} color={Colors.homeChevron}/>
                             </TouchableOpacity>
                             ))}
                         </View>   
@@ -73,7 +79,7 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
     container: { 
         flex: 1, 
-        paddingTop: 60,
+        paddingTop: 30,
         paddingHorizontal: 20,
     },
     header: {
@@ -90,38 +96,40 @@ const styles = StyleSheet.create({
     subHeaderText: {
         fontWeight: '400',
         fontSize: 16,
-        color: Colors.textPrimary,
+        color: Colors.textSecondary,
         marginLeft: 9
     },
     categoryBlock: {
-    marginBottom: 24,
-  },
-  categoryHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-    gap: 6,
-  },
-  categoryText: {
-    color: 'white',
-    fontWeight: '600',
-  },
-  noteItem: {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    padding: 12,
-    borderRadius: 12,
-    marginBottom: 8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  noteText: {
-    color: 'white',
-    fontSize: 14,
-    flex: 1,
-    paddingRight: 8,
-  },
-
+        marginBottom: 24,
+    },
+    categoryHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 8,
+        gap: 6,
+    },
+    categoryText: {
+        color: 'white',
+        fontWeight: '600',
+    },
+    noteItem: {
+        // backgroundColor: 'rgba(255, 255, 255, 0.05)'
+        height: 60,
+        padding: 12,
+        borderRadius: 12,
+        borderColor: Colors.textSecondaryLight,
+        borderWidth: 1,
+        marginBottom: 8,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    noteText: {
+        color: 'white',
+        fontSize: 14,
+        flex: 1,
+        paddingRight: 8,
+    },
 });
 
 export default HomeScreen;

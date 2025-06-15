@@ -13,7 +13,7 @@ const Tab = createBottomTabNavigator();
 const tabIcons = {
   Home: 'home',
   Create: 'add',
-  Summary: 'summary', // Assuming 'Analytics' is the default route name for the 'else' case
+  Summary: 'summary', 
 };
 
 const BottomTabs = () => {

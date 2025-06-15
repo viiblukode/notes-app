@@ -41,6 +41,11 @@ const SettingsScreen = () => {
                     </TouchableOpacity>
                     ))}
                 </ScrollView>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.button}>
+                        <Text style={styles.buttonText}>{Strings.DELETE}</Text>
+                        </TouchableOpacity>
+                </View>
 
         </LinearGradient>
     );
@@ -50,7 +55,7 @@ const SettingsScreen = () => {
 const styles = StyleSheet.create({
   container: { 
         flex: 1, 
-        paddingTop: 60,
+        paddingTop: 30,
         paddingHorizontal: 20,
     },
     header: {
@@ -68,8 +73,9 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     item: {
-        backgroundColor: '#2a003f',
         borderRadius: 12,
+        borderColor: Colors.textSecondaryLight,
+        borderWidth: 1,
         paddingVertical: 16,
         paddingHorizontal: 8,
         marginBottom: 16,
@@ -83,20 +89,30 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     itemLabel: {
-        color: '#fff',
+        color: Colors.textPrimary,
         fontSize: 16,
         marginLeft: 12,
     },
-    deleteButton: {
-        backgroundColor: '#ec4899',
-        margin: 20,
-        paddingVertical: 12,
-        borderRadius: 999,
-        alignItems: 'center',
+    buttonContainer: {
+        height: 100,
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: Colors.navBarBackground[1],
     },
-    deleteText: {
-        color: '#fff',
+    button: {
+        backgroundColor: Colors.secondary,
+        padding: 15,
+        borderRadius: 30,
+        alignItems: 'center',
+        marginTop: 25,
+        marginHorizontal: 60,
+    },
+    buttonText: {
+        color: Colors.textPrimary,
         fontWeight: 'bold',
+        fontSize: 16,
     },
 });
 

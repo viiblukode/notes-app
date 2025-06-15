@@ -4,3 +4,9 @@ export interface Note {
     category: string;
     dateCreated: Date;
 }
+
+export enum NoteCategory {
+    WorkAndStudy = 'Work and study',
+    Life = 'Life',
+    HealthAndWellness = 'Health and wellness'
+}
