@@ -1,16 +1,18 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { Colors, Strings } from '../../constants';
 import { NavHeader } from '../../components/Header';
 import { Ionicons } from '@expo/vector-icons';
 import { getImage } from '../../constants/images';
 import { deleteAllNotes } from '../../utils/NotesUtil';
 import { ModalView } from '../../components/Modal';
+import { useModal } from '../../components/ModalHandler';
+import Toast from 'react-native-toast-message';
 
 
 const SettingsScreen = () => {
-    const [isModalVisible, setModalVisible] = useState(false);
+    const { showModal } = useModal();
 
     const settingsList = [
         {label: Strings.ONLNE_CUSTOMER, icon: 'headphones'},
@@ -19,23 +21,26 @@ const SettingsScreen = () => {
         {label: Strings.ABOUT, icon: 'info'}
     ];
 
-    const hideModal = () => {
-        setModalVisible(false);
-    }
-
     const deleteNotesHandler = async () => {
-        setModalVisible(true);
-        console.log(`=== ~ deleteNotesHandler ~ deleteNotesHandler: into deleteNotesHandler....`,)
-        const status = await deleteAllNotes();
-        if(status) {
-            return (
-            <ModalView 
-                isVisible={isModalVisible} 
-                title={Strings.DELETE_SUCCESS} 
-                message={Strings.DELETE_CONFIRMATION} 
-                onDismiss={ hideModal } />
-            )
-        }
+        showModal({
+            title: Strings.DELETE,
+            message: Strings.DELETE_PROMPT,
+            confirmText: Strings.PROMPT_CONFIRM,
+            cancelText: Strings.PROMPT_CANCEL,
+            onCancel: () => {
+                console.log(`=== ~ deleteNotesHandler ~ onCancel: Delete action cancelled!`)
+            },
+            onConfirm: async () => {
+                const status = await deleteAllNotes();
+                if(status) {
+                    Toast.show({
+                        type: 'success', 
+                        text1: Strings.DELETE_SUCCESS, 
+                        text2: Strings.DELETE_CONFIRMATION
+                    })
+                }
+            }
+        })
     };
 
     return (

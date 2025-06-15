@@ -29,7 +29,7 @@ const Strings = {
     PRIVACY_POLICY: 'Privacy Policy',
     ABOUT: 'About Us',
     DELETE: 'Delete All Notes',
-    DELETE_SUCCESS: 'Deleted Successfully',
+    DELETE_SUCCESS: 'Delete Successfully',
     DELETE_CONFIRMATION: 'All notes have been cleared.',
     DELETE_PROMPT: 'Are you sure you want to delete all notes? (Action is irreversible)',
     PROMPT_CONFIRM: 'Confirm',
