@@ -1,6 +1,6 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Linking } from 'react-native';
 import { Colors, Strings } from '../../constants';
 import { NavHeader } from '../../components/Header';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,16 +8,18 @@ import { getImage } from '../../constants/images';
 import { clearCache } from '../../utils/NotesUtil';
 import { useModal } from '../../components/ModalHandler';
 import Toast from 'react-native-toast-message';
+import * as WebBrowser from 'expo-web-browser';
 
 
 const SettingsScreen = () => {
     const { showModal } = useModal();
 
+    // data Array to load settings options with iconName and dummy url to redirect via in app browser
     const settingsList = [
-        {label: Strings.ONLNE_CUSTOMER, icon: 'headphones'},
-        {label: Strings.USER_AGREEMENT, icon: 'paper'},
-        {label: Strings.PRIVACY_POLICY, icon: 'book'},
-        {label: Strings.ABOUT, icon: 'info'}
+        {label: Strings.ONLNE_CUSTOMER, icon: 'headphones', url: 'https://google.com'},
+        {label: Strings.USER_AGREEMENT, icon: 'paper', url: 'https://google.com'},
+        {label: Strings.PRIVACY_POLICY, icon: 'book', url: 'https://google.com'},
+        {label: Strings.ABOUT, icon: 'info', url: 'https://google.com'}
     ];
 
     const deleteNotesHandler = async () => {
@@ -42,6 +44,15 @@ const SettingsScreen = () => {
         })
     };
 
+    const handleInAppBrowser = async (url: string) => {
+        try {
+            const result = await WebBrowser.openBrowserAsync(url);
+            console.log(`=== ~ handleInAppBrowser ~ result:`, result);
+        } catch (error) {
+            console.warn('Error opening URL:', error);
+        }
+    }
+
     return (
          <LinearGradient 
             style={styles.container} 
@@ -58,7 +69,7 @@ const SettingsScreen = () => {
                     <TouchableOpacity
                         key={index}
                         style={styles.item}
-                        onPress={() => {}}
+                        onPress={ () => handleInAppBrowser(item.url)}
                     >
                         <View style={styles.iconLabel}>
                             <Image source={getImage(item.icon)} />

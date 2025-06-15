@@ -29,11 +29,11 @@ const HomeScreen = () => {
     const getCategoryIcon = (category: string) => {
         switch(category) {
             case NoteCategory.HealthAndWellness:
-                return 'pencil';
+                return 'health';
             case NoteCategory.Life:
                 return 'serveFood';
             case NoteCategory.WorkAndStudy:
-                return 'health';
+                return 'pencil';
             default:
                 return 'pencil'
         }
