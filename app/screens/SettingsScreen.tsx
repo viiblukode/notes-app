@@ -5,8 +5,7 @@ import { Colors, Strings } from '../../constants';
 import { NavHeader } from '../../components/Header';
 import { Ionicons } from '@expo/vector-icons';
 import { getImage } from '../../constants/images';
-import { deleteAllNotes } from '../../utils/NotesUtil';
-import { ModalView } from '../../components/Modal';
+import { clearCache } from '../../utils/NotesUtil';
 import { useModal } from '../../components/ModalHandler';
 import Toast from 'react-native-toast-message';
 
@@ -30,8 +29,8 @@ const SettingsScreen = () => {
             onCancel: () => {
                 console.log(`=== ~ deleteNotesHandler ~ onCancel: Delete action cancelled!`)
             },
-            onConfirm: async () => {
-                const status = await deleteAllNotes();
+            onConfirm: () => {
+                const status = clearCache();
                 if(status) {
                     Toast.show({
                         type: 'success', 

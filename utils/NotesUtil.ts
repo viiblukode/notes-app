@@ -3,13 +3,17 @@ import { Note, NoteCategory } from '../constants/types';
 
 
 const STORAGE_KEY = '@notes_list';
+let notesCache: Note[] | null = null;
 
 export const createNote = async ( note: Note): Promise<boolean> => {
     try {
         const existingNotes = await getAllNotes();
         const updatedNotes = [...existingNotes, note];
         const noteJsonVal = JSON.stringify(updatedNotes);
+        //save to asyncStorage
         await AsyncStorage.setItem(STORAGE_KEY, noteJsonVal);
+        //updateCache when have new Note created 
+        notesCache = updatedNotes;
         return true;
     } catch (err) {
         console.log(`=== ~ createNote ~ err:`, err);
@@ -18,9 +22,18 @@ export const createNote = async ( note: Note): Promise<boolean> => {
 }
 
 export const getAllNotes = async (): Promise<Note[]> => {
+    //check if cache is empty 
+    if (notesCache) {
+        console.log(`=== ~ getAllNotes ~ notesCache: Have cached data, returning cached data`, )
+        return notesCache;
+    }
+
+    //if no cache data then query and store to cache
     try {
         const notesData = await AsyncStorage.getItem(STORAGE_KEY);
-        return notesData != null ? JSON.parse(notesData) : [];  //return empty array if got no data
+        const notes = notesData != null ? JSON.parse(notesData) : []; // set empty array if no data
+        notesCache = notes  
+        return notes;
     } catch (err) {
         console.log(`=== ~ getNotes ~ err:`, err);
         return [];
@@ -42,6 +55,13 @@ export const deleteAllNotes = async (): Promise<boolean>=> {
     }
 }
 
+export const clearCache = () => {
+    console.log(`=== ~ clearCache ~ clearCache: clearing out cache data...`);
+    notesCache = null;
+    return true;
+}
+
+
 export const getLatestNotesByCategory = ( notes: Note[], filterLatest?: boolean ): {
   category: NoteCategory;
   data: Note[];
@@ -54,7 +74,9 @@ export const getLatestNotesByCategory = ( notes: Note[], filterLatest?: boolean 
 
   // Group notes
   notes.forEach((note: Note) => {
-    grouped[note.category].push(note);
+    if(grouped[note.category]) {
+        grouped[note.category].push(note);
+    }
   });
 
   if(filterLatest) {

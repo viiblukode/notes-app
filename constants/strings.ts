@@ -31,7 +31,7 @@ const Strings = {
     DELETE: 'Delete All Notes',
     DELETE_SUCCESS: 'Delete Successfully',
     DELETE_CONFIRMATION: 'All notes have been cleared.',
-    DELETE_PROMPT: 'Are you sure you want to delete all notes? (Action is irreversible)',
+    DELETE_PROMPT: 'Are you sure you want to delete all cached notes?',
     PROMPT_CONFIRM: 'Confirm',
     PROMPT_CANCEL: 'Cancel',
 }
