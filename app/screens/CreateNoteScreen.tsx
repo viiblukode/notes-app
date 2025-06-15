@@ -1,22 +1,58 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, TextInput, TouchableOpacity } from 'react-native';
 import { Colors, Strings } from '../../constants';
 import { NavHeader } from '../../components/Header';
-import { NoteCategory } from '../../constants/types'
+import { Note, NoteCategory } from '../../constants/types'
 import RNPickerSelect from 'react-native-picker-select';
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
+import uuid from 'react-native-uuid';
+import moment from 'moment';
+import { createNote } from '../../utils/NotesUtil';
+import Toast from 'react-native-toast-message';
+import { useNavigation } from '@react-navigation/native';
 
 const CreateNoteScreen = () => {
     const [selectedValue, setSelectedValue] = useState<string>('');
     const [noteContent, setNoteContent] = useState<string>('');
     const MAX_CHAR_LIMIT = 200;
+    const navigator = useNavigation();
+    const pickerRef = useRef<any>(null);
 
     const dropDownOptions = Object.values(NoteCategory).map((value) => ({
         label: value,
         value
     }));
+
+    const onSaveNote = async () => {
+        const newNote: Note = {
+            id:  uuid.v4(),
+            description: noteContent,
+            category: selectedValue as NoteCategory,
+            dateCreated: moment().toISOString()
+        }
+
+        //save to async
+        const saveStatus = await createNote(newNote);
+        if(saveStatus) {
+            Toast.show({
+                type: 'success', 
+                text1: Strings.SAVE_SUCCESS, 
+                text2: Strings.SAVE_SUCCESS_MESSAGE
+            });
+            //clear state
+            setSelectedValue('');
+            setNoteContent('');
+            navigator.goBack();
+        } else {
+             Toast.show({
+                type: 'error', 
+                text1: Strings.SAVE_FAILED, 
+                text2: Strings.SAVE_FAILED_MESSAGE
+            });
+        }
+    };
 
     return (
         <LinearGradient 
@@ -30,20 +66,24 @@ const CreateNoteScreen = () => {
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 keyboardVerticalOffset={60}
             >
-                <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                <ScrollView 
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    keyboardShouldPersistTaps="handled" >
                     <View style={styles.dropdownContainer}>
                         <RNPickerSelect
+                            ref={pickerRef}
                             onValueChange={(value) => setSelectedValue(value)}
                             value={selectedValue}
-                            placeholder={{ label: Strings.CATEGORY_PLACEHOLDER, value: '' }}
+                            placeholder={{ label: Strings.CATEGORY_PLACEHOLDER, value: null }}
                             items={dropDownOptions}
                             Icon={() => 
                                 <Ionicons name={"chevron-down"} size={20} color={Colors.textPrimary} style={{marginVertical: 15}}/>
                             }
                             style={pickerStyle}
-                        />
-                    </View>
-
+                            />
+                        </View>
+                        <TouchableOpacity style={StyleSheet.absoluteFillObject} activeOpacity={1} onPress={() => pickerRef.current?.togglePicker?.()}>  
+                        </TouchableOpacity>
                     <View>
                         <TextInput
                             style={styles.noteInput}
@@ -56,10 +96,11 @@ const CreateNoteScreen = () => {
                         />
                     </View>       
                 </ScrollView>
-                
             </KeyboardAvoidingView>
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity 
+                    style={styles.button} 
+                    onPress={onSaveNote}>
                     <Text style={styles.buttonText}>{Strings.SAVE}</Text>
                  </TouchableOpacity>
             </View>
@@ -84,13 +125,17 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         paddingHorizontal: 10,
         paddingVertical: Platform.OS === 'ios' ? 12 : 0,
-        alignContent: 'center'
+        alignContent: 'center',
+    },
+    dropDownPlaceholder: {
+        fontSize: 16,
+        color: Colors.textSecondary,
     },
     dropdownPicker: {
         fontSize: 14,
         fontWeight: 400,
         color: Colors.textPrimary,
-        paddingVertical: 16,
+        // paddingVertical: 16,
         paddingLeft: 16,
         paddingRight: 50
     },

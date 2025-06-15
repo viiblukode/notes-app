@@ -1,32 +1,40 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, SectionList } from 'react-native';
 import { Colors, Strings } from '../../constants';
 import { IconHeader } from '../../components/Header';
 import { getImage } from '../../constants/images';
+import { useIsFocused } from '@react-navigation/native';
+import { Note, NoteCategory } from '../../constants/types';
+import { getAllNotes, getLatestNotesByCategory } from '../../utils/NotesUtil';
 
 const SummaryScreen = () => {
 
-    const dummyData = [
-        {
-            id: '1',
-            title: 'Work and study',
-            records: 50,
-            avatar: 'workStudyAvatar', 
-        },
-        {
-            id: '2',
-            title: 'Home life',
-            records: 12,
-            avatar: 'homeAvatar', 
-        },
-        {
-            id: '3',
-            title: 'Health and wellness',
-            records: 30,
-            avatar: 'healthWellnessAvatar', 
-        },
-    ];
+    const [notesData, setNotesData] = useState<Note[]>([]);
+    const onFocus = useIsFocused();
+
+    useEffect(() => {
+        const loadData = async () => {
+            const data = await getAllNotes();
+            setNotesData(data);
+        }
+        loadData();
+    }, [onFocus]);
+
+    const filteredNotes = getLatestNotesByCategory(notesData);
+    
+    const getCategoryAvatar = (category: string) => {
+        switch(category) {
+            case NoteCategory.WorkAndStudy:
+                return 'workStudyAvatar';
+            case NoteCategory.Life:
+                return 'homeAvatar';
+            case NoteCategory.HealthAndWellness:
+                return 'healthWellnessAvatar';
+            default:
+                return 'healthWellnessAvatar';
+        }
+    }
 
     return (
          <LinearGradient 
@@ -39,24 +47,43 @@ const SummaryScreen = () => {
                         title={Strings.HOME} 
                         imageName={'robot'}/>
                 </View>
-                <ScrollView contentContainerStyle={styles.scrollContent}>
-                    {dummyData.map((data) => (
-                    <View key={data.id} style={styles.card}>
-                        <View style={styles.cardHeader}>
-                        <Image source={getImage(data.avatar)} style={styles.avatar} />
-                        <Text style={styles.cardTitle}>{data.title}</Text>
-                        <TouchableOpacity style={styles.detailButton}>
-                            <Text style={styles.detailText}>Detail</Text>
-                        </TouchableOpacity>
+                <SectionList 
+                    sections={filteredNotes}
+                    keyExtractor={(item, index) => item.id ?? index.toString()}
+                    renderSectionHeader={({section}) => (
+                        <View style={styles.card}>
+                            <View style={styles.cardHeader}>
+                                <Image
+                                source={getImage(getCategoryAvatar(section.category))}
+                                style={styles.avatar}
+                                />
+                                <Text style={styles.cardTitle}>{section.category}</Text>
+                                <TouchableOpacity style={styles.detailButton}>
+                                    <Text style={styles.detailText}>Detail</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
+                    )}
+                    renderItem={({ section }) => (    
                         <View style={styles.recordSummaryView}>
                             <Text style={styles.recordText}>
-                                This topic has a total of {data.records} records.
+                                This topic has a total of {section.data.length} records.
                             </Text>
                         </View> 
-                    </View>
-                    ))}
-                </ScrollView>
+                    )}
+                    renderSectionFooter={({ section }) => {
+                        if(section.data.length === 0) {
+                            return (
+                                <View style={styles.recordSummaryView}>
+                                    <Text style={styles.recordText}>
+                                        This topic has a total of {section.data.length} records.
+                                    </Text>
+                                </View> 
+                            );
+                        }
+                        return null;
+                    }}
+                />
         </LinearGradient>
     );
 }
@@ -80,7 +107,6 @@ export const styles = StyleSheet.create({
     card: {
         borderRadius: 20,
         padding: 15,
-        marginBottom: 20,
     },
     cardHeader: {
         flexDirection: 'row',
@@ -109,16 +135,17 @@ export const styles = StyleSheet.create({
         fontWeight: '600',
     },
     recordText: {
-        marginVertical: 10,
+        marginVertical: 15,
         color: Colors.textSecondary,
-        paddingHorizontal: 10
+        paddingHorizontal: 12,
     },
     recordSummaryView: {
-        marginTop: 10,
+        marginVertical: 5,
         borderRadius: 12,
         borderColor: Colors.textSecondaryLight,
         borderWidth: 1,
-    }
+        height: 50,
+    },
 });
 
 export default SummaryScreen;

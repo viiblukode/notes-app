@@ -1,8 +1,8 @@
 export interface Note {
     id: string;
     description: string;
-    category: string;
-    dateCreated: Date;
+    category: NoteCategory;
+    dateCreated: string;
 }
 
 export enum NoteCategory {

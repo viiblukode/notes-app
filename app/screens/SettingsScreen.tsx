@@ -1,19 +1,42 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert } from 'react-native';
 import { Colors, Strings } from '../../constants';
 import { NavHeader } from '../../components/Header';
 import { Ionicons } from '@expo/vector-icons';
 import { getImage } from '../../constants/images';
+import { deleteAllNotes } from '../../utils/NotesUtil';
+import { ModalView } from '../../components/Modal';
+
 
 const SettingsScreen = () => {
+    const [isModalVisible, setModalVisible] = useState(false);
 
     const settingsList = [
         {label: Strings.ONLNE_CUSTOMER, icon: 'headphones'},
         {label: Strings.USER_AGREEMENT, icon: 'paper'},
         {label: Strings.PRIVACY_POLICY, icon: 'book'},
         {label: Strings.ABOUT, icon: 'info'}
-    ]
+    ];
+
+    const hideModal = () => {
+        setModalVisible(false);
+    }
+
+    const deleteNotesHandler = async () => {
+        setModalVisible(true);
+        console.log(`=== ~ deleteNotesHandler ~ deleteNotesHandler: into deleteNotesHandler....`,)
+        const status = await deleteAllNotes();
+        if(status) {
+            return (
+            <ModalView 
+                isVisible={isModalVisible} 
+                title={Strings.DELETE_SUCCESS} 
+                message={Strings.DELETE_CONFIRMATION} 
+                onDismiss={ hideModal } />
+            )
+        }
+    };
 
     return (
          <LinearGradient 
@@ -37,14 +60,14 @@ const SettingsScreen = () => {
                             <Image source={getImage(item.icon)} />
                             <Text style={styles.itemLabel}>{item.label}</Text>
                         </View>
-                        <Ionicons name="chevron-forward" size={20} color="#c084fc" />
+                        <Ionicons name="chevron-forward" size={20} color={Colors.homeChevron} />
                     </TouchableOpacity>
                     ))}
                 </ScrollView>
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button} onPress={deleteNotesHandler}>
                         <Text style={styles.buttonText}>{Strings.DELETE}</Text>
-                        </TouchableOpacity>
+                    </TouchableOpacity>
                 </View>
 
         </LinearGradient>

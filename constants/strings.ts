@@ -13,6 +13,11 @@ const Strings = {
     CATEGORY_PLACEHOLDER: 'Choose a category',
     NOTE_PLAEHOLDER: 'Please input note content',
     SAVE: 'Save',
+    SAVE_SUCCESS_MESSAGE: 'Note have been saved successfully!',
+    SAVE_SUCCESS: 'Success',
+    SAVE_FAILED_MESSAGE: 'Note failed to save, please try again later.',
+    SAVE_FAILED: 'Failed',
+    NO_DATA: 'There is no notes created.',
 
     //summary
     DETAIL: 'Detail',
@@ -24,7 +29,11 @@ const Strings = {
     PRIVACY_POLICY: 'Privacy Policy',
     ABOUT: 'About Us',
     DELETE: 'Delete All Notes',
-    DELETE_CONFIRMATION: 'All notes have been cleared'
+    DELETE_SUCCESS: 'Deleted Successfully',
+    DELETE_CONFIRMATION: 'All notes have been cleared.',
+    DELETE_PROMPT: 'Are you sure you want to delete all notes? (Action is irreversible)',
+    PROMPT_CONFIRM: 'Confirm',
+    PROMPT_CANCEL: 'Cancel',
 }
 
 export default Strings;
