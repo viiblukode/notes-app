@@ -54,9 +54,7 @@ export const getLatestNotesByCategory = ( notes: Note[], filterLatest?: boolean 
 
   // Group notes
   notes.forEach((note: Note) => {
-    // if (grouped[note.category]) {
-      grouped[note.category].push(note);
-    // }
+    grouped[note.category].push(note);
   });
 
   if(filterLatest) {
@@ -69,6 +67,7 @@ export const getLatestNotesByCategory = ( notes: Note[], filterLatest?: boolean 
     }));
   }
 
+  //return all notes by categories, sorted by lastCreated DESC 
   return Object.entries(grouped).map(([category, notes]) => ({
     category: category as NoteCategory,
     data: notes

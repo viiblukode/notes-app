@@ -15,7 +15,6 @@ const Images = {
     healthWellnessAvatar: require('../assets/health-wellness-avatar.png'),
     homeAvatar: require('../assets/home-avatar.png'),
     workStudyAvatar: require('../assets/work-study-avatar.png'),
-
 }
 
 export type ImageName = keyof typeof Images;

@@ -19,6 +19,7 @@ const CreateNoteScreen = () => {
     const MAX_CHAR_LIMIT = 200;
     const navigator = useNavigation();
     const pickerRef = useRef<any>(null);
+    const isIos = Platform.OS === 'ios';
 
     const dropDownOptions = Object.values(NoteCategory).map((value) => ({
         label: value,
@@ -77,18 +78,32 @@ const CreateNoteScreen = () => {
                             placeholder={{ label: Strings.CATEGORY_PLACEHOLDER, value: null }}
                             items={dropDownOptions}
                             Icon={() => 
-                                <Ionicons name={"chevron-down"} size={20} color={Colors.textPrimary} style={{marginVertical: 15}}/>
+                                <Ionicons 
+                                    name={"chevron-down"} 
+                                    size={20} 
+                                    color={Colors.textPrimary} 
+                                    style={{marginVertical: isIos ? 9 : 17}}
+                                />
                             }
                             style={pickerStyle}
+                            useNativeAndroidPickerStyle={false}
                             />
                         </View>
-                        <TouchableOpacity style={StyleSheet.absoluteFillObject} activeOpacity={1} onPress={() => pickerRef.current?.togglePicker?.()}>  
-                        </TouchableOpacity>
+                        {isIos && (
+                            <TouchableOpacity 
+                                style={StyleSheet.absoluteFillObject} 
+                                activeOpacity={1} 
+                                onPress={() => {
+                                    if (isIos) {
+                                        pickerRef.current?.togglePicker?.();
+                                    }}}>  
+                            </TouchableOpacity>
+                        )}
                     <View>
                         <TextInput
                             style={styles.noteInput}
                             placeholder="Please input note content"
-                            placeholderTextColor="#ccc"
+                            placeholderTextColor={Colors.textSecondary}
                             multiline
                             value={noteContent}
                             onChangeText={setNoteContent}
@@ -126,6 +141,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: Platform.OS === 'ios' ? 12 : 0,
         alignContent: 'center',
+        height: 60,
     },
     dropDownPlaceholder: {
         fontSize: 16,
@@ -135,7 +151,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 400,
         color: Colors.textPrimary,
-        // paddingVertical: 16,
         paddingLeft: 16,
         paddingRight: 50
     },
@@ -187,9 +202,9 @@ const pickerStyle = StyleSheet.create({
         fontSize: 14,
         fontWeight: 400,
         color: Colors.textPrimary,
-        paddingVertical: 16,
+        paddingVertical: 10,
         paddingLeft: 16,
-        paddingRight: 50
+        paddingRight: 50,
     },
     inputAndroid: {
         fontSize: 14,
@@ -197,7 +212,8 @@ const pickerStyle = StyleSheet.create({
         color: Colors.textPrimary,
         paddingVertical: 16,
         paddingLeft: 16,
-        paddingRight: 50
+        paddingRight: 50,
+        height: 60,
     }
 })
 

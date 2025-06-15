@@ -81,7 +81,7 @@ const SettingsScreen = () => {
 
 
 const styles = StyleSheet.create({
-  container: { 
+    container: { 
         flex: 1, 
         paddingTop: 30,
         paddingHorizontal: 20,
