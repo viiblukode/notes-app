@@ -1,6 +1,6 @@
 # Project Title
 
-> A short description of your project and what it does.
+> This project is a notes app that able to do CRUD without the need of backend. A simple CRUD demo app.
 
 ---
 
